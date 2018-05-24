@@ -1,0 +1,24 @@
+body, html {
+	padding: 1px 0px 1px 0px;
+	font-size:18px
+	line-height:1.3;
+	background-color:#F4F4F4;
+	font-color:black;
+}
+
+.bigHeader {
+	line-height:1.7;
+	font-size:160%;
+	text-align:center;
+}
+
+.lesserHeader {
+	font-size:130%;
+	text-align:center;
+}
+
+.lesserText {
+	font-size:85%;
+	text-align:center;
+}
+
