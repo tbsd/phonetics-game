@@ -50,7 +50,7 @@ public class GameController extends Pane {
         topPane.setAlignment(Pos.CENTER);
         topPane.setPrefWidth(100);
 
-        data.getGame().getCurrentTurn().endedBooleanProperty().addListener(observable -> {
+        data.getGame().getCurrentRound().endedBooleanProperty().addListener(observable -> {
             if (gameView.getMediaPlayer() != null)
                 gameView.getMediaPlayer().dispose();
         });
@@ -58,7 +58,7 @@ public class GameController extends Pane {
         Label timer = new Label();
         timer.setFont(Font.font(Font.getDefault().toString(), 16));
         timer.setAlignment(Pos.CENTER_LEFT);
-        timer.textProperty().bind(data.getGame().getCurrentTurn().currentTimeIntegerProperty().asString());
+        timer.textProperty().bind(data.getGame().getCurrentRound().currentTimeIntegerProperty().asString());
 
         Button playButton = new Button("Воспроизвести");
         playButton.setAlignment(Pos.CENTER_RIGHT);
@@ -68,9 +68,9 @@ public class GameController extends Pane {
                 gameView.getMediaPlayer().dispose();
             playButton.setDisable(true);
         });
-        //Listener for the first turn
-        data.getGame().getCurrentTurn().pausedBooleanProperty().addListener(turnObservable -> {
-            if (data.getGame().getCurrentTurn().isPaused()) {
+        //Listener for the first round
+        data.getGame().getCurrentRound().pausedBooleanProperty().addListener(roundObservable -> {
+            if (data.getGame().getCurrentRound().isPaused()) {
                 playButton.setDisable(true);
                 if (gameView.getMediaPlayer() != null)
                     gameView.getMediaPlayer().pause();
@@ -81,10 +81,10 @@ public class GameController extends Pane {
                 }
             }
         });
-        // New listener for each new turn
-        data.getGame().currentTurnObjectProperty().addListener(gameObservable ->
-                data.getGame().getCurrentTurn().pausedBooleanProperty().addListener(turnObservable -> {
-                    if (data.getGame().getCurrentTurn().isPaused()) {
+        // New listener for each new round
+        data.getGame().currentRoundObjectProperty().addListener(gameObservable ->
+                data.getGame().getCurrentRound().pausedBooleanProperty().addListener(roundObservable -> {
+                    if (data.getGame().getCurrentRound().isPaused()) {
                         playButton.setDisable(true);
                         if (gameView.getMediaPlayer() != null)
                             gameView.getMediaPlayer().pause();
@@ -95,12 +95,11 @@ public class GameController extends Pane {
                         }
                     }
                 }));
-//        timer.textProperty().bind(data.getGame().getCurrentTurn().currentTimeIntegerProperty().asString());
         data.getGame().startedBooleanProperty().addListener(observable -> gameView.playSound());
-        data.getGame().currentTurnObjectProperty().addListener(observableValue -> {
+        data.getGame().currentRoundObjectProperty().addListener(observableValue -> {
             if (!data.getGame().isEnded()) {
                 playButton.requestFocus();
-                timer.textProperty().bind(data.getGame().getCurrentTurn().currentTimeIntegerProperty().asString());
+                timer.textProperty().bind(data.getGame().getCurrentRound().currentTimeIntegerProperty().asString());
                 gameView.playSound();
             }
         });
@@ -137,9 +136,9 @@ public class GameController extends Pane {
             btn.setPrefWidth(btnPrefSize);
             // This is needed to associate a sound with an exact button
             btn.setAccessibleRoleDescription(new File(s.getRecordPath()).toURI().toString());
-            //Listener for the first turn
-            data.getGame().getCurrentTurn().pausedBooleanProperty().addListener(turnObservable -> {
-                if (data.getGame().getCurrentTurn().isPaused()) {
+            //Listener for the first round
+            data.getGame().getCurrentRound().pausedBooleanProperty().addListener(roundObservable -> {
+                if (data.getGame().getCurrentRound().isPaused()) {
                     btn.setDisable(true);
                 } else
                     // If btn hasn't been disabled as an answer button
@@ -147,10 +146,10 @@ public class GameController extends Pane {
                             && btn.getBackground() != incorrectAnswerBackground)
                         btn.setDisable(false);
             });
-            // New listener for each new turn
-            data.getGame().currentTurnObjectProperty().addListener(gameObservable ->
-                    data.getGame().getCurrentTurn().pausedBooleanProperty().addListener(turnObservable -> {
-                        if (data.getGame().getCurrentTurn().isPaused()) {
+            // New listener for each new round
+            data.getGame().currentRoundObjectProperty().addListener(gameObservable ->
+                    data.getGame().getCurrentRound().pausedBooleanProperty().addListener(roundObservable -> {
+                        if (data.getGame().getCurrentRound().isPaused()) {
                             btn.setDisable(true);
                         } else
                             // If btn hasn't been disabled as an answer button
@@ -181,19 +180,19 @@ public class GameController extends Pane {
                         }
                     }
                 }
-                if (data.getGame().getCurrentTurn().getSound().isPresent(btn.getText())) {
+                if (data.getGame().getCurrentRound().getSound().isPresent(btn.getText())) {
                     answerStatus.setTextFill(Color.GREEN);
                     answerStatus.setText("Верно!");
                     trueButton.setBackground(correctAnswerBackground);
-                    data.getGame().getCurrentTurn().setCorrect(true);
+                    data.getGame().getCurrentRound().setCorrect(true);
                 } else {
                     answerStatus.setTextFill(Color.RED);
                     answerStatus.setText("Ошибка");
                     trueButton.setBackground(incorrectAnswerBackground);
-                    data.getGame().getCurrentTurn().setCorrect(false);
+                    data.getGame().getCurrentRound().setCorrect(false);
                 }
                 trueButton.setDisable(true);
-                data.getGame().getCurrentTurn().end();
+                data.getGame().getCurrentRound().end();
             });
             ((LinkedList<HBox>) rows).getLast().getChildren().add(btn);
         }

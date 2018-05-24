@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Preferences implements Serializable {
     private int maxTime;
-    private int maxTurns;
+    private int maxRounds;
     private double volume;
     private String language;
     private transient LinkedList<Sound> soundPool = new LinkedList<>();
@@ -21,26 +21,26 @@ public class Preferences implements Serializable {
         setMaxTime(10);
         setVolume(0.5);
         setLanguage(Language.GERMAN);
-        setMaxTurns(soundPool.size() / 2);
+        setMaxRounds(soundPool.size() / 2);
     }
 
     Preferences(Preferences other) {
         maxTime = other.maxTime;
-        maxTurns = other.maxTurns;
+        maxRounds = other.maxRounds;
         volume = other.volume;
         setLanguage(other.getLanguage());
     }
 
-    Preferences(int maxTime, int maxTurns, String language) {
+    Preferences(int maxTime, int maxRounds, String language) {
         this.volume = 0.5;
         setMaxTime(maxTime);
-        setMaxTurns(maxTurns);
+        setMaxRounds(maxRounds);
         setLanguage(language);
     }
 
-    Preferences(int maxTime, int maxTurns, String language, double volume) {
+    Preferences(int maxTime, int maxRounds, String language, double volume) {
         setMaxTime(maxTime);
-        setMaxTurns(maxTurns);
+        setMaxRounds(maxRounds);
         setVolume(volume);
         setLanguage(language);
     }
@@ -79,15 +79,15 @@ public class Preferences implements Serializable {
         this.maxTime = maxTime;
     }
 
-    public int getMaxTurns() {
-        return maxTurns;
+    public int getMaxRounds() {
+        return maxRounds;
     }
 
-    public void setMaxTurns(int maxTurns) {
-        if (maxTurns < 1 || maxTurns >= soundPool.size())
-            throw new IllegalArgumentException("MaxTurns must be greater than zero " +
+    public void setMaxRounds(int maxRounds) {
+        if (maxRounds < 1 || maxRounds >= soundPool.size())
+            throw new IllegalArgumentException("MaxRounds must be greater than zero " +
                     "and less than the total number of sounds.");
-        this.maxTurns = maxTurns;
+        this.maxRounds = maxRounds;
     }
 
     public List<Sound> getRandPool(int poolSize) {

@@ -10,18 +10,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Game implements Serializable {
-    private List<Turn> pastTurns;
+    private List<Round> pastRounds;
     private Preferences preferences;
     private transient List<Sound> soundsPool;
     private transient boolean abortRequested = false;
-    private transient ObjectProperty<Turn> currentTurn;
+    private transient ObjectProperty<Round> currentRound;
     private transient BooleanProperty started;
     private transient BooleanProperty ended;
 
     public Game(Preferences preferences) {
-        pastTurns = new LinkedList<>();
+        pastRounds = new LinkedList<>();
         this.preferences = preferences;
-        soundsPool = preferences.getRandPool(preferences.getMaxTurns() + 1); // + 1 for two options on last turn
+        // + 1 for two options on last round
+        soundsPool = preferences.getRandPool(preferences.getMaxRounds() + 1);
         setStarted(false);
         setEnded(false);
     }
@@ -55,51 +56,51 @@ public class Game implements Serializable {
         endedBooleanProperty().set(value);
     }
 
-    public ObjectProperty<Turn> currentTurnObjectProperty() {
-        if (currentTurn == null)
-            currentTurn = new SimpleObjectProperty<>(new Turn(preferences.getMaxTime(), popFromPool()));
-        return currentTurn;
+    public ObjectProperty<Round> currentRoundObjectProperty() {
+        if (currentRound == null)
+            currentRound = new SimpleObjectProperty<>(new Round(preferences.getMaxTime(), popFromPool()));
+        return currentRound;
     }
 
     public String getLanguage() {
         return preferences.getLanguage();
     }
 
-    public final Turn getCurrentTurn() {
-        return currentTurnObjectProperty().get();
+    public final Round getCurrentRound() {
+        return currentRoundObjectProperty().get();
     }
 
-    public final void setCurrentTurn(Turn value) {
-        currentTurnObjectProperty().set(value);
+    public final void setCurrentRound(Round value) {
+        currentRoundObjectProperty().set(value);
     }
 
     public long getCorrectCount() {
-        return pastTurns.stream().filter(Turn::isCorrect).count();
+        return pastRounds.stream().filter(Round::isCorrect).count();
     }
 
     public double getAvgTime() {
-        if (pastTurns.size() == 0) return 0;
-        return pastTurns.stream().mapToDouble(Turn::getElapsedTime).sum() / pastTurns.size();
+        if (pastRounds.size() == 0) return 0;
+        return pastRounds.stream().mapToDouble(Round::getElapsedTime).sum() / pastRounds.size();
     }
 
     public double getAvgMistake() {
-        if (pastTurns.size() == 0) return 0;
-        return ((double) pastTurns.stream().filter(o -> !o.isCorrect()).count() / pastTurns.size());
+        if (pastRounds.size() == 0) return 0;
+        return ((double) pastRounds.stream().filter(o -> !o.isCorrect()).count() / pastRounds.size());
     }
 
     public double getAvgCorrect() {
-        if (pastTurns.size() == 0) return 0;
-        return ((double) getCorrectCount() / pastTurns.size());
+        if (pastRounds.size() == 0) return 0;
+        return ((double) getCorrectCount() / pastRounds.size());
     }
 
     public double getAvgTimeOnCorrect() {
         if (getCorrectCount() == 0) return 0;
-        return pastTurns.stream().filter(Turn::isCorrect).mapToDouble(Turn::getElapsedTime)
+        return pastRounds.stream().filter(Round::isCorrect).mapToDouble(Round::getElapsedTime)
                 .sum() / getCorrectCount();
     }
 
     public boolean isPerfect() {
-        return getCorrectCount() == preferences.getMaxTurns();
+        return getCorrectCount() == preferences.getMaxRounds();
     }
 
     public void startGame() {
@@ -110,10 +111,10 @@ public class Game implements Serializable {
 
     List<Sound> getSoundsPool() {
         LinkedList<Sound> result = new LinkedList<>();
-        if (currentTurn == null) {
+        if (currentRound == null) {
             result.addAll(soundsPool);
         } else {
-            result.add(getCurrentTurn().getSound());
+            result.add(getCurrentRound().getSound());
             result.addAll(soundsPool);
         }
         return result;
@@ -124,26 +125,26 @@ public class Game implements Serializable {
         if (!isStarted()) { // First turn
             setStarted(true);
         } else {
-            endTurn();
+            endRound();
             if (abortRequested)
                 return;
-            newTurn();
-            if (soundsPool.isEmpty()) { // Last turn is fake it shouldn't be added to pastTurns
+            newRound();
+            if (soundsPool.isEmpty()) { // Last turn is fake it shouldn't be added to pastRounds
                 setEnded(true);
                 return;
             }
         }
-        getCurrentTurn().startCountdown();
-        getCurrentTurn().endedBooleanProperty().addListener((observableValue, aBoolean, t1) -> run());
+        getCurrentRound().startCountdown();
+        getCurrentRound().endedBooleanProperty().addListener((observableValue, aBoolean, t1) -> run());
     }
 
     public void abort() {
         abortRequested = true;
-        // Last turn is fake it shouldn't be added to pastTurns
-        if (!soundsPool.isEmpty() && !pastTurns.contains(getCurrentTurn()))
-            endTurn(); // Current turn to pastTurns
-        while (soundsPool.size() > 1) // Last turn is fake it shouldn't be added to pastTurns
-            pastTurns.add(new Turn(preferences.getMaxTime(), popFromPool()));
+        // Last turn is fake it shouldn't be added to pastRounds
+        if (!soundsPool.isEmpty() && !pastRounds.contains(getCurrentRound()))
+            endRound(); // Current turn to pastRounds
+        while (soundsPool.size() > 1) // Last turn is fake it shouldn't be added to pastRounds
+            pastRounds.add(new Round(preferences.getMaxTime(), popFromPool()));
         setEnded(true);
     }
 
@@ -151,17 +152,17 @@ public class Game implements Serializable {
         return soundsPool.remove(0);
     }
 
-    private void endTurn() {
-        if (getCurrentTurn() == null)
+    private void endRound() {
+        if (getCurrentRound() == null)
             return;
-        getCurrentTurn().end();
-        pastTurns.add(getCurrentTurn());
+        getCurrentRound().end();
+        pastRounds.add(getCurrentRound());
     }
 
-    private void newTurn() {
-        if (currentTurn == null)
-            currentTurnObjectProperty();
+    private void newRound() {
+        if (currentRound == null)
+            currentRoundObjectProperty();
         else
-            setCurrentTurn(new Turn(preferences.getMaxTime(), popFromPool()));
+            setCurrentRound(new Round(preferences.getMaxTime(), popFromPool()));
     }
 }

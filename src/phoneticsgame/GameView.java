@@ -32,8 +32,8 @@ class GameView {
         alertPane.setHgap(4);
         alertPane.add(new Label("Верно отвечено:"), 0, 0);
         alertPane.add(new Label(data.getGame().getCorrectCount() + "/" +
-                data.getPreferences().getMaxTurns()), 1, 0);
-        double percentage = 100.0 * data.getGame().getCorrectCount() / data.getPreferences().getMaxTurns();
+                data.getPreferences().getMaxRounds()), 1, 0);
+        double percentage = 100.0 * data.getGame().getCorrectCount() / data.getPreferences().getMaxRounds();
         alertPane.add(new Label(String.format("%.2f", percentage) + "%"), 2, 0);
         alertPane.add(new Label("Среднее время:"), 0, 1);
         alertPane.add(new Label(String.format("%.2f", data.getGame().getAvgTime())), 1, 1);
@@ -45,7 +45,7 @@ class GameView {
         if (mediaPlayer != null)
             mediaPlayer.dispose();
         Media record =
-                new Media(new File(data.getGame().getCurrentTurn().getSound().getRecordPath()).toURI().toString());
+                new Media(new File(data.getGame().getCurrentRound().getSound().getRecordPath()).toURI().toString());
         mediaPlayer = new MediaPlayer(record);
         if (data.getPreferences().getVolume() == 0)
             return;

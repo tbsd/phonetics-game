@@ -10,7 +10,7 @@ import javafx.util.Duration;
 
 import java.io.Serializable;
 
-public class Turn implements Serializable {
+public class Round implements Serializable {
     private boolean correct;
     private Sound sound;
     private int maxTime;
@@ -21,7 +21,7 @@ public class Turn implements Serializable {
     private transient BooleanProperty paused;
 
 
-    public Turn(int maxTime, Sound sound) {
+    public Round(int maxTime, Sound sound) {
         elapsedTime = maxTime;
         this.maxTime = maxTime;
         setCurrentTime(maxTime);

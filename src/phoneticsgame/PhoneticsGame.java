@@ -48,7 +48,7 @@ public class PhoneticsGame extends Application {
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(closeEvent -> {
             if (data.getGame() != null && data.getGame().isStarted() && !data.getGame().isEnded()) {
-                data.getGame().getCurrentTurn().pause();
+                data.getGame().getCurrentRound().pause();
                 if (mainWindow.getMenuController().abortGameDialog() == ButtonType.OK) {
                     data.getGame().abort();
                     data.saveProfile();
@@ -56,7 +56,7 @@ public class PhoneticsGame extends Application {
                     Platform.exit();
                 } else {
                     closeEvent.consume();
-                    data.getGame().getCurrentTurn().resume();
+                    data.getGame().getCurrentRound().resume();
                 }
             }
         });

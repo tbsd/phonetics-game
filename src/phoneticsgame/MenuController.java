@@ -48,10 +48,10 @@ public class MenuController extends Group {
         MenuItem newGameItem = new MenuItem("Новая игра ");
         newGameItem.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
         newGameItem.setOnAction(e -> {
-            data.getGame().getCurrentTurn().pause();
+            data.getGame().getCurrentRound().pause();
             if (data.getGame() != null && data.getGame().isStarted() && !data.getGame().isEnded())
                 if (abortGameDialog() == ButtonType.CANCEL) {
-                    data.getGame().getCurrentTurn().resume();
+                    data.getGame().getCurrentRound().resume();
                     return;
                 }
             data.getGame().abort();
@@ -73,9 +73,9 @@ public class MenuController extends Group {
                 return;
             }
             if (pauseSwitchItem.isSelected())
-                data.getGame().getCurrentTurn().pause();
+                data.getGame().getCurrentRound().pause();
             else
-                data.getGame().getCurrentTurn().resume();
+                data.getGame().getCurrentRound().resume();
         });
         return pauseSwitchItem;
     }
@@ -84,10 +84,10 @@ public class MenuController extends Group {
         MenuItem stopGameItem = new MenuItem("Завершить игру");
         stopGameItem.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
         stopGameItem.setOnAction(e -> {
-            data.getGame().getCurrentTurn().pause();
+            data.getGame().getCurrentRound().pause();
             if (data.getGame() != null && data.getGame().isStarted() && !data.getGame().isEnded())
                 if (abortGameDialog() == ButtonType.CANCEL) {
-                    data.getGame().getCurrentTurn().resume();
+                    data.getGame().getCurrentRound().resume();
                     return;
                 }
             data.getGame().abort();
@@ -99,10 +99,10 @@ public class MenuController extends Group {
         MenuItem exitItem = new MenuItem("Выход");
         exitItem.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
         exitItem.setOnAction(e -> {
-            data.getGame().getCurrentTurn().pause();
+            data.getGame().getCurrentRound().pause();
             if (data.getGame() != null && data.getGame().isStarted() && !data.getGame().isEnded())
                 if (abortGameDialog() == ButtonType.CANCEL) {
-                    data.getGame().getCurrentTurn().resume();
+                    data.getGame().getCurrentRound().resume();
                     return;
                 }
             data.getGame().abort();
@@ -313,25 +313,25 @@ public class MenuController extends Group {
         Spinner<Integer> maxTimeSpinner = new Spinner<>(1, Integer.MAX_VALUE, data.getPreferences().getMaxTime());
         maxTimeSpinner.setEditable(true);
         prefPane.addRow(1, new Label("Время на ход:"), maxTimeSpinner, new Label("сек."));
-        Spinner<Integer> maxTurnsSpinner = new Spinner<>(1, data.getPreferences().getAvailableSounds() - 1,
-                data.getPreferences().getMaxTurns());
-        maxTurnsSpinner.setEditable(true);
+        Spinner<Integer> maxRoundsSpinner = new Spinner<>(1, data.getPreferences().getAvailableSounds() - 1,
+                data.getPreferences().getMaxRounds());
+        maxRoundsSpinner.setEditable(true);
         // Atomic variable allows to use its value in lambda expression without making it global variable
-        AtomicReference<Spinner<Integer>> maxTurnsSpinnerWrapper = new AtomicReference<>(maxTurnsSpinner);
-        prefPane.addRow(2, new Label("Количество ходов:"), maxTurnsSpinnerWrapper.get());
+        AtomicReference<Spinner<Integer>> maxRoundsSpinnerWrapper = new AtomicReference<>(maxRoundsSpinner);
+        prefPane.addRow(2, new Label("Количество ходов:"), maxRoundsSpinnerWrapper.get());
         newPreferences.availableSoundsIntegerProperty().addListener(observable -> {
-            if (newPreferences.getAvailableSounds() > newPreferences.getMaxTurns())
-                maxTurnsSpinnerWrapper.get().setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,
-                        newPreferences.getAvailableSounds() - 1, newPreferences.getMaxTurns()));
+            if (newPreferences.getAvailableSounds() > newPreferences.getMaxRounds())
+                maxRoundsSpinnerWrapper.get().setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,
+                        newPreferences.getAvailableSounds() - 1, newPreferences.getMaxRounds()));
             else
-                maxTurnsSpinnerWrapper.get().setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,
+                maxRoundsSpinnerWrapper.get().setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,
                         newPreferences.getAvailableSounds() - 1, newPreferences.getAvailableSounds() - 1));
         });
 
         prefDialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         Optional<ButtonType> result = prefDialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            newPreferences.setMaxTurns(maxTurnsSpinner.getValue());
+            newPreferences.setMaxRounds(maxRoundsSpinner.getValue());
             newPreferences.setMaxTime(maxTimeSpinner.getValue());
             return newPreferences;
         }
