@@ -1,21 +1,18 @@
 # phonetics-game
+Phonetics Game: Тест Фонетики
+JavaFX-based.
 
-<<<<<<< HEAD
 Abstract
 
 A small test on the correlation of phonemes and their written representation.
 Available languages: German.
 =======
-Phonetics Game: Тест Фонетики
-JavaFX-based.
->>>>>>> 22c477a3e7453ab04b69949a6b44edb8aa90292a
 
 Небольшой тест на соотнесение фонем и их письменного представления.
 Есть возможность настройки количества и длительности раундов. Ведется простая статистика результатов.
 Доступные языки: немецкий.
 ===
 
-<<<<<<< HEAD
 Описание игры
 Игра заключается в том, что игрок выбирает букву или сочитание букв, которое соответствует звуку, воспроизведенному в начале хода. После завершения игры становится доступна статистика по даной игре. Так же игроку доступна общая статистика профиля.
 
@@ -38,8 +35,4 @@ JavaFX-based.
 Статистика профиля	Ctrl+S
 Настройки	        Ctrl+C
 Выход	            Ctrl+Q
-=======
-A small test on the correlation of phonemes and their written representation.
-You can set preferred amount and durability of rounds. The application keeps some simple statistics.
-Available languages: German.
->>>>>>> 22c477a3e7453ab04b69949a6b44edb8aa90292a
+
