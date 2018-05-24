@@ -95,7 +95,7 @@ class MenuView {
     void aboutDialog() {
         Alert aboutDialog = createHtmlDialog(IOManager.ABOUT);
         aboutDialog.setTitle("PhoneticsGame");
-        aboutDialog.getDialogPane().setPrefSize(400, 200);
+        aboutDialog.getDialogPane().setPrefSize(370, 220);
         aboutDialog.show();
     }
 
