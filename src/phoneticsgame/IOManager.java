@@ -12,7 +12,6 @@ abstract class IOManager {
     public static final String PROFILEDIR = USERDATA + "profiles/";
     public static final String PREFERENCES = USERDATA + "config.pref";
     public static final String LASTPROFILE = USERDATA + "last.profile";
-    public static final String ICON = "res/icon.png"
     public static final String SOUNDDIR = "res/records/";
     public static final String LANGUAGESDIR = "data/languages/";
     public static final String README = "README.html";
