@@ -4,11 +4,13 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class PhoneticsGame extends Application {
     static final int mainWidth = 900;
@@ -45,6 +47,11 @@ public class PhoneticsGame extends Application {
         primaryStage.setMinWidth(mainWidth);
         primaryStage.setMinHeight(mainHeight);
         primaryStage.setMaxWidth(mainWidth);
+        try {
+            primaryStage.getIcons().add(new Image(Paths.get(IOManager.ICON).toUri().toURL().toString()));
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(closeEvent -> {
             if (data.getGame() != null && data.getGame().isStarted() && !data.getGame().isEnded()) {
