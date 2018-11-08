@@ -8,6 +8,9 @@ A small test on the correlation of phonemes and their written representation.
 Available languages: German.
 
 
+![screenshot](screenshot.png)
+
+
 Небольшой тест на соотнесение фонем и их письменного представления.
 Есть возможность настройки количества и длительности раундов. Ведется простая статистика результатов.  
 Доступные языки: немецкий.
